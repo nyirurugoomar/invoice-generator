@@ -21,11 +21,7 @@ export class InvoiceService {
     @InjectModel(Invoice.name) private invoiceModel: Model<InvoiceDocument>,
   ) {}
 
-  /**
-   * Calculate invoice totals with Rwanda tax logic
-   * Rwanda VAT: 18% standard rate
-   * Formula: Price = Taxable Amount + (Taxable Amount × 18%)
-   */
+  
   private calculateInvoiceTotals(dto: CreateInvoiceDto | UpdateInvoiceDto): CreateInvoiceDto | UpdateInvoiceDto {
     let subtotal = 0; // Total before any taxes or discounts
     let totalTax = 0; // Total VAT amount
@@ -86,9 +82,7 @@ export class InvoiceService {
     };
   }
 
-  /**
-   * Validate invoice business rules
-   */
+ 
   private validateInvoice(dto: CreateInvoiceDto | UpdateInvoiceDto): void {
     // Validate that due date is after invoice date
     if (dto.dueDate && dto.invoiceDate) {
@@ -126,9 +120,7 @@ export class InvoiceService {
     }
   }
 
-  /**
-   * Create a new invoice with Rwanda-specific calculations
-   */
+
   async create(createInvoiceDto: CreateInvoiceDto): Promise<Invoice> {
     // Validate invoice
     this.validateInvoice(createInvoiceDto);
@@ -154,9 +146,7 @@ export class InvoiceService {
     }
   }
 
-  /**
-   * Find all invoices with optional filters
-   */
+
   async findAll(filters?: {
     status?: InvoiceStatus;
     fromDate?: string;
@@ -262,13 +252,7 @@ export class InvoiceService {
     }
   }
 
-  /**
-   * Update invoice status only
-   * Common status transitions in Rwanda:
-   * DRAFT -> SENT -> PAID
-   * DRAFT -> CANCELLED
-   * SENT -> OVERDUE (automatically based on due date)
-   */
+
   async updateStatus(id: string, status: InvoiceStatus): Promise<Invoice> {
     const invoice = await this.findOne(id);
 
@@ -344,9 +328,7 @@ export class InvoiceService {
     return result.modifiedCount;
   }
 
-  /**
-   * Generate PDF for an invoice (Rwanda-specific format)
-   */
+
   async generatePDF(id: string, res: Response): Promise<void> {
     const invoice = await this.findOne(id);
 
